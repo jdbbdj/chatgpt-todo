@@ -1,117 +1,96 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {StyleSheet, View, Text, FlatList, TouchableOpacity} from 'react-native';
+import {ListItem} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default function App() {
+  const [todos, setTodos] = React.useState([
+    {
+      key: 0,
+      title: 'Account',
+      icon: 'av-timer',
+    },
+    {
+      key: 1,
+      title: 'Category',
+      icon: 'flight-takeoff',
+    },
+    {
+      key: 2,
+      title: 'About',
+      icon: 'av-timer',
+    },
+  ]);
+  const [newTodo, setNewTodo] = React.useState('YETS');
 
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const addTodo = () => {
+    console.log(todos);
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+  const deleteTodo = key => {
+    setTodos(todos.filter(todo => todo.key !== key));
+  };
+
+  const Item = ({title}) => (
+    <View
+      style={[
+        styles.listItem,
+        {
+          flex: 1,
+          padding: 0,
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        },
+      ]}>
+      <Text style={styles.listItemTitle}>{title}</Text>
+      <Icon
+        name="md-trash"
+        size={24}
+        color="#900"
+        onPress={() => deleteTodo(key)}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    </View>
   );
-};
+  const renderItem = ({item}) => <Item title={item.title} key={item.key} />;
+
+  return (
+    <View style={styles.container}>
+      <Text style={[styles.title, {height: 40}]}>Todo List</Text>
+
+      <FlatList
+        style={styles.flatList}
+        data={todos}
+        renderItem={renderItem}
+        keyExtractor={item => item.key}
+      />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    padding: 16,
   },
-  sectionTitle: {
+  title: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: 'bold',
+    marginBottom: 16,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  flatList: {
+    marginTop: 16,
+    marginBottom: 16,
   },
-  highlight: {
-    fontWeight: '700',
+  listItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  listItemTitle: {
+    fontSize: 16,
+    color: 'black',
   },
 });
-
-export default App;
